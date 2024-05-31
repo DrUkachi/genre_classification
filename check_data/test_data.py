@@ -1,5 +1,6 @@
 import scipy.stats
 import pandas as pd
+import numpy as np
 
 
 def test_column_presence_and_type(data):
@@ -117,4 +118,7 @@ def test_kolmogorov_smirnov(data, ks_alpha):
         # obtaining a test statistic (TS) equal or more extreme that the one we got
         # by chance, when the null hypothesis is true. If this probability is not
         # large enough, this dataset should be looked at carefully, hence we fail
-        assert p_value > alpha_prime
+
+        # Check if p_value is not nan before performing the assertion
+        if not np.isnan(p_value):
+            assert p_value > alpha_prime

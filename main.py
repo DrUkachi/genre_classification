@@ -1,6 +1,7 @@
 import mlflow
 import os
 import hydra
+from hydra.utils import get_original_cwd
 from omegaconf import DictConfig, OmegaConf
 import yaml
 
@@ -14,8 +15,14 @@ def load_yaml_as_dict(yaml_file_path):
 @hydra.main(config_path='configs', config_name='config', version_base='1.1')
 def go(config: DictConfig):
 
-    yaml_file_path ="./configs/config.yaml"
-    config = load_yaml_as_dict(yaml_file_path)
+    # Print the current working directory and original working directory
+    print("Current working directory:", os.getcwd())  
+    print("Original working directory:", get_original_cwd())  
+
+    # Use the original working directory to form the correct path
+    config_path = os.path.join(get_original_cwd(), 'configs', 'config.yaml')
+    config = load_yaml_as_dict(config_path)
+    print(OmegaConf.to_yaml(config))  # Debugging line to print the configuration
 
     # Setup the wandb experiment. All runs will be grouped under this name
     os.environ["WANDB_PROJECT"] = config["main"]["project_name"]

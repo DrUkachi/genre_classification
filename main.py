@@ -5,7 +5,7 @@ from omegaconf import DictConfig, OmegaConf
 
 
 # This automatically reads in the configuration
-@hydra.main(config_path='configs', config_name='config')
+@hydra.main(config_path='configs', config_name='config', version_base='1.1')
 def go(config: DictConfig):
 
     # Setup the wandb experiment. All runs will be grouped under this name
@@ -16,12 +16,12 @@ def go(config: DictConfig):
     root_path = hydra.utils.get_original_cwd()
 
     # Check which steps we need to execute
-    if isinstance(config["main"]["execute_steps"], str):
+    if isinstance(config.main.execute_steps, str):
         # This was passed on the command line as a comma-separated list of steps
-        steps_to_execute = config["main"]["execute_steps"].split(",")
+        steps_to_execute = config.main.execute_steps.split(",")
     else:
-        assert isinstance(config["main"]["execute_steps"], list)
-        steps_to_execute = config["main"]["execute_steps"]
+        assert isinstance(config.main.execute_steps, list)
+        steps_to_execute = config.main.execute_steps
 
     # Download step
     if "download" in steps_to_execute:

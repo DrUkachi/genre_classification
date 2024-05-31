@@ -2,11 +2,20 @@ import mlflow
 import os
 import hydra
 from omegaconf import DictConfig, OmegaConf
+import yaml
+
+def load_yaml_as_dict(yaml_file_path):
+    with open(yaml_file_path, 'r') as file:
+        data = yaml.safe_load(file)
+    return data
 
 
 # This automatically reads in the configuration
 @hydra.main(config_path='configs', config_name='config', version_base='1.1')
 def go(config: DictConfig):
+
+    yaml_file_path ="./configs/config.yaml"
+    config = load_yaml_as_dict(yaml_file_path)
 
     # Setup the wandb experiment. All runs will be grouped under this name
     os.environ["WANDB_PROJECT"] = config["main"]["project_name"]
@@ -16,12 +25,12 @@ def go(config: DictConfig):
     root_path = hydra.utils.get_original_cwd()
 
     # Check which steps we need to execute
-    if isinstance(config.main.execute_steps, str):
+    if isinstance(config["main"]["execute_steps"], str):
         # This was passed on the command line as a comma-separated list of steps
-        steps_to_execute = config.main.execute_steps.split(",")
+        steps_to_execute = config["main"]["execute_steps"].split(",")
     else:
-        assert isinstance(config.main.execute_steps, list)
-        steps_to_execute = config.main.execute_steps
+        assert isinstance(config["main"]["execute_steps"], list)
+        steps_to_execute = config["main"]["execute_steps"]
 
     # Download step
     if "download" in steps_to_execute:

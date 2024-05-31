@@ -6,7 +6,7 @@ dependencies:
   - requests
   - pip
   - mlflow
-  - hydra-core
+  - hydra-core=1.0.6
   - pip:
       - wandb
-      - hydra-joblib-launcher
+      - hydra-joblib-launcher==1.1.2

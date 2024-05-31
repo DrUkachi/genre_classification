@@ -1,27 +1,16 @@
 import mlflow
 import os
 import hydra
-from hydra.utils import get_original_cwd
-from omegaconf import DictConfig, OmegaConf
-import yaml
 
-def load_yaml_as_dict(yaml_file_path):
-    with open(yaml_file_path, 'r') as file:
-        data = yaml.safe_load(file)
-    return data
+from omegaconf import DictConfig, OmegaConf
+
 
 
 # This automatically reads in the configuration
 @hydra.main(config_path='configs', config_name='config', version_base='1.1')
 def go(config: DictConfig):
 
-    # Print the current working directory and original working directory
-    print("Current working directory:", os.getcwd())  
-    print("Original working directory:", get_original_cwd())  
 
-    # Use the original working directory to form the correct path
-    config_path = os.path.join(get_original_cwd(), 'configs', 'config.yaml')
-    config = load_yaml_as_dict(config_path)
     print(OmegaConf.to_yaml(config))  # Debugging line to print the configuration
 
     # Setup the wandb experiment. All runs will be grouped under this name
@@ -36,7 +25,7 @@ def go(config: DictConfig):
         # This was passed on the command line as a comma-separated list of steps
         steps_to_execute = config["main"]["execute_steps"].split(",")
     else:
-        assert isinstance(config["main"]["execute_steps"], list)
+        assert isinstance(list(config["main"]["execute_steps"]), list)
         steps_to_execute = config["main"]["execute_steps"]
 
     # Download step

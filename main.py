@@ -26,7 +26,7 @@ def go(config: DictConfig):
         steps_to_execute = config["main"]["execute_steps"].split(",")
     else:
         assert isinstance(list(config["main"]["execute_steps"]), list)
-        steps_to_execute = config["main"]["execute_steps"]
+        steps_to_execute = list(config["main"]["execute_steps"])
 
     # Download step
     if "download" in steps_to_execute:
